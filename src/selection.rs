@@ -40,16 +40,17 @@ where
     min_index
 }
 
-pub fn selection_sort<T>(mut src: Vec<T>) -> Vec<T>
+pub fn selection_sort<T>(src: &Vec<T>) -> Vec<T>
 where
     T: Clone + std::fmt::Debug + PartialOrd + Copy,
 {
-    (0..src.len())
+    let mut cloned = src.clone();
+    (0..cloned.len())
         .fold(Vec::new(), |mut acc: Vec<T>, i| {
-            let min_index = find_min_value_index(i, &src);
-            let min_value = src[min_index];
+            let min_index = find_min_value_index(i, &cloned);
+            let min_value = cloned[min_index];
             acc.push(min_value);
-            src = swap(i, min_index, src.clone()).unwrap();
+            cloned = swap(i, min_index, cloned.clone()).unwrap();
             acc
         })
 }
@@ -61,13 +62,19 @@ mod test {
     #[test]
     fn it() {
         let data = vec![8, 4, 3, 7, 6, 5, 2, 1];
-        assert_eq!(selection_sort(data), vec![1, 2, 3, 4, 5, 6, 7, 8]);
+        let original = data.clone();
+        assert_eq!(selection_sort(&data), vec![1, 2, 3, 4, 5, 6, 7, 8]);
+        assert_eq!(&data, &original);
 
         let data = vec![1, 2, 3, 4, 5, 6, 7,  8];
-        assert_eq!(selection_sort(data), vec![1, 2, 3, 4, 5, 6, 7, 8]);
+        let original = data.clone();
+        assert_eq!(selection_sort(&data), vec![1, 2, 3, 4, 5, 6, 7, 8]);
+        assert_eq!(&data, &original);
 
         let data = vec![4, 5, 4, 6, 2, 1, 3];
-        assert_eq!(selection_sort(data), vec![1, 2, 3, 4, 4, 5, 6]);
+        let original = data.clone();
+        assert_eq!(selection_sort(&data), vec![1, 2, 3, 4, 4, 5, 6]);
+        assert_eq!(&data, &original);
     }
 
     #[test]
